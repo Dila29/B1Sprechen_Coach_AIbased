@@ -166,21 +166,161 @@
   </div>
 </section>
 <!-- END: Sprechen Teil 2 -->
-<!-- BEGIN: Analyse & Feedback -->
-<section class="section-container" data-purpose="content-section" id="analyse">
-<div class="container mx-auto px-6">
-<div class="text-center mb-12">
-<h3 class="text-3xl font-bold mb-4">4. Analyse &amp; Feedback</h3>
-<div class="h-1 w-24 bg-brand-softGold mx-auto"></div>
-<p class="text-gray-500 mt-4">Präzise KI-Auswertung Ihrer Aussprache und Grammatik.</p>
+<!-- Button to results page -->
+<div class="text-center mt-8">
+  <a href="#analyse-result"
+    class="inline-block bg-brand-mutedRed hover:bg-red-700 text-white font-semibold px-8 py-3 rounded-custom transition shadow-lg">
+    Ergebnis der KI-Analyse ansehen
+  </a>
+  <p class="text-sm text-gray-500 mt-3">
+    Nachdem Sie das Formular abgeschickt haben, kann die Analyse bis zu 30 Sekunden dauern.
+  </p>
 </div>
-<div class="card-placeholder rounded-custom flex flex-col items-center justify-center bg-brand-charcoal/5 border-none">
-<svg class="w-16 h-16 text-brand-softGold mb-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-<span class="text-gray-400 font-medium">Interaktives Dashboard-Placeholder</span>
-</div>
+
 </div>
 </section>
-<!-- END: Analyse & Feedback -->
+<!-- END: Sprechen Teil 2 -->
+
+<!-- BEGIN: Analyse Result -->
+<section class="section-container bg-[#fdf8fd]" data-purpose="content-section" id="analyse-result">
+  <div class="max-w-6xl mx-auto px-6">
+
+    <!-- Top Navbar -->
+    <nav class="glass-nav sticky top-0 z-40 px-6 py-4 border-b border-black/10 rounded-custom mb-8">
+      <div class="max-w-6xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="bg-yellow-400 p-2 rounded-lg flex items-center justify-center">
+            <span class="material-symbols-outlined text-black" style="font-variation-settings: 'FILL' 1;">school</span>
+          </div>
+          <div>
+            <h1 class="text-yellow-400 font-bold text-xl leading-none">B1 Speaking Coach</h1>
+            <p class="text-white/60 text-xs mt-1">AI Feedback für Ihre Präsentation</p>
+          </div>
+        </div>
+
+        <button class="bg-red-700 hover:bg-red-800 text-white px-6 py-2.5 rounded-full text-sm transition-all duration-300 shadow-lg">
+          Feedback starten
+        </button>
+      </div>
+    </nav>
+
+    <div class="w-full max-w-[900px] mx-auto space-y-8">
+
+      <!-- Loading Section -->
+      <section class="flex flex-col items-center justify-center space-y-6 py-20" id="status">
+        <div class="relative w-24 h-24">
+          <div class="absolute inset-0 border-4 border-yellow-400/20 rounded-full"></div>
+          <div class="absolute inset-0 border-4 border-red-700 border-t-transparent rounded-full animate-spin"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <span class="material-symbols-outlined text-red-700 text-3xl">psychology</span>
+          </div>
+        </div>
+
+        <div class="text-center space-y-2">
+          <h2 class="text-2xl font-bold text-gray-900">Analyse wird geladen...</h2>
+          <p class="text-gray-500">Unsere KI wertet Ihre Sprachaufnahme gerade aus.</p>
+        </div>
+
+        <div class="w-64 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+          <div class="h-full premium-gradient-bg w-2/3 rounded-full shimmer"></div>
+        </div>
+      </section>
+
+      <!-- Result Card -->
+      <article class="hidden animate-in fade-in slide-in-from-bottom-4 duration-700" id="result">
+        <div class="bg-white rounded-xl overflow-hidden shadow-[0_20px_40px_rgba(28,27,31,0.06)] border border-red-100">
+
+          <!-- Header -->
+          <div class="p-8 md:p-12 border-b border-gray-100">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+              <div class="space-y-2">
+                <span class="text-yellow-700 font-bold tracking-widest uppercase text-xs">Ergebnisbericht</span>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight" id="name"></h2>
+              </div>
+
+              <div class="flex items-center gap-3 bg-yellow-100 px-4 py-2 rounded-xl">
+                <span class="material-symbols-outlined text-black" style="font-variation-settings: 'FILL' 1;">verified</span>
+                <span class="font-bold text-black">Level B1 Validiert</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-12">
+
+            <!-- Left Panel -->
+            <div class="md:col-span-4 bg-gray-50 p-8 md:p-10 space-y-8">
+              <div class="space-y-4">
+                <div class="flex items-center gap-2 text-yellow-700">
+                  <span class="material-symbols-outlined text-xl">book</span>
+                  <span class="font-bold text-sm uppercase tracking-wider">Thema</span>
+                </div>
+                <div class="text-xl font-semibold text-gray-700 leading-relaxed" id="thema"></div>
+              </div>
+
+              <div class="pt-8 border-t border-red-100 space-y-6">
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-500 text-sm">Flüssigkeit</span>
+                  <div class="w-24 h-2 bg-gray-200 rounded-full">
+                    <div class="h-full bg-yellow-400 w-[85%] rounded-full"></div>
+                  </div>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-500 text-sm">Grammatik</span>
+                  <div class="w-24 h-2 bg-gray-200 rounded-full">
+                    <div class="h-full bg-red-700 w-[70%] rounded-full"></div>
+                  </div>
+                </div>
+
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-500 text-sm">Vokabular</span>
+                  <div class="w-24 h-2 bg-gray-200 rounded-full">
+                    <div class="h-full bg-black w-[90%] rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+
+              <img
+                alt="Education abstract"
+                class="w-full h-48 object-cover rounded-lg mt-4"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxZoUO8tBHJjKeG48fNz55nvMcDmnUgkb0adKRT82psx6UAe4bljRuLy6q2k7dESMajKBkXpBJ_ZQq6vRGT4s02oY7h7li2X6ppfPcxeH6xyhdO1ueDFIkFrMaOSDZ0fMRH2m4biS1KlI3y3dZlewVYrSaU71e3-ey4pRFQHwjtZmsvX4-kavzIKgQHgFR72n2YrJGFGL34FntQNgnmNVP7utNtHUazsjvTGsBTMhO0XKDUM7XYzeJQz-P-G1NFmWbm5Ikkh9OrSAS"
+              />
+            </div>
+
+            <!-- Right Panel -->
+            <div class="md:col-span-8 p-8 md:p-12 bg-white">
+              <div class="flex items-center gap-3 mb-8">
+                <div class="w-10 h-10 premium-gradient-bg rounded-full flex items-center justify-center text-white">
+                  <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">smart_toy</span>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900">KI Analyse und Feedback</h3>
+              </div>
+
+              <div class="max-w-none text-gray-700 leading-relaxed text-lg space-y-6" id="feedback">
+                <!-- Feedback content will be injected here -->
+              </div>
+
+              <div class="mt-12 pt-8 border-t border-gray-100 flex flex-wrap gap-4">
+                <button class="flex-1 min-w-[200px] premium-gradient-bg text-white py-4 px-8 rounded-xl font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-lg">
+                  <span class="material-symbols-outlined">refresh</span>
+                  Nochmal versuchen
+                </button>
+
+                <button class="flex-1 min-w-[200px] bg-yellow-400 text-black py-4 px-8 rounded-xl font-bold hover:bg-yellow-300 transition-all flex items-center justify-center gap-2">
+                  <span class="material-symbols-outlined">share</span>
+                  Teilen
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+<!-- END: Analyse Result -->
 <!-- BEGIN: Kontakt -->
 <section class="section-container bg-brand-charcoal text-white" data-purpose="footer-contact" id="kontakt">
 <div class="container mx-auto px-6">
