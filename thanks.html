@@ -36,20 +36,25 @@
     </p>
 
     <div class="text-center mt-8">
-      <a id="analyseBtn"
-         href="analyse.html"
-         class="inline-block bg-red-800 hover:bg-red-900 text-white font-semibold text-lg px-10 py-4 rounded-2xl transition shadow-xl">
-        Ergebnis der KI-Analyse ansehen
-      </a>
-      <p class="text-sm text-gray-500 mt-3">
-        Nachdem Sie das Formular abgeschickt haben, kann die Analyse bis zu 30 Sekunden dauern.
-      </p>
-    </div>
+  <a id="analyseBtn"
+    href="analyse.html"
+    class="inline-block bg-brand-mutedRed hover:bg-red-900 text-white font-semibold text-lg px-16 py-5 rounded-custom transition shadow-xl">
+    Ergebnis der KI-Analyse ansehen
+  </a>
+  <p class="text-sm text-gray-500 mt-3">
+    Nachdem Sie das Formular abgeschickt haben, kann die Analyse bis zu 30 Sekunden dauern.
+  </p>
+</div>
 
-    <div class="mt-6 text-sm text-gray-400" id="submissionInfo"></div>
-  </div>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const submissionId = params.get("submission_id");
 
-  <script>
+  if (submissionId) {
+    document.getElementById("analyseBtn").href =
+      `analyse.html?submission_id=${encodeURIComponent(submissionId)}`;
+
+    <script>
     const params = new URLSearchParams(window.location.search);
     const submissionId = params.get("submission_id");
 
