@@ -5,25 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>B1 Speaking Coach - Analyse</title>
 
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
 
 <style>
 body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-family: sans-serif;
     background-color: #fdf8fd;
 }
-.shimmer {
-    background: linear-gradient(90deg, #f7f2f8 25%, #e5e1e7 50%, #f7f2f8 75%);
-    background-size: 200% 100%;
-    animation: loading 1.5s infinite;
-}
-@keyframes loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
 </style>
-
 </head>
 
 <body class="min-h-screen flex flex-col">
@@ -47,7 +36,7 @@ body {
 
     <div class="bg-white p-6 rounded-xl shadow">
         <h2 class="font-bold text-lg mb-2">Situation</h2>
-        <p id="thema"></p>
+        <p id="situation"></p>
     </div>
 
     <div class="bg-white p-6 rounded-xl shadow">
@@ -67,12 +56,12 @@ body {
 
 <script>
 
-// ✅ ambil ID dari URL (?id=...)
+// ambil ID dari URL
 const params = new URLSearchParams(window.location.search);
 const submissionId = params.get("id");
 
-// ✅ ambil data dari Google Sheets (opensheet)
-const sheetURL = "https://opensheet.elk.sh/1Q_19DamqDI5sTmJwNZreqIapyiIL-LpYdlaR2tLPUUI/Sheet1";
+// ✅ URL SUDAH DIPERBAIKI
+const sheetURL = "https://opensheet.elk.sh/1SfKI2AxF3ZqVTvok7CPM-VctgLh3AuB28tKc0Tpdq5k/Sheet1";
 
 async function fetchResults(){
 
@@ -87,15 +76,17 @@ async function fetchResults(){
 
         const data = await fetch(sheetURL).then(r => r.json());
 
-const result = data.find(
-    row => String(row["Submission ID"]).replace(/\\D/g,'') === String(submissionId).replace(/\\D/g,'')
-);
+        console.log("DATA:", data);
+
+        const result = data.find(
+            row => String(row["Submission ID"]).trim() === String(submissionId).trim()
+        );
 
         if(result){
 
             document.getElementById("name").innerText = result["Name"] || "";
 
-            document.getElementById("thema").innerText =
+            document.getElementById("situation").innerText =
                 result["Situatin wählen"] || "";
 
             document.getElementById("transkript").innerText =
@@ -115,7 +106,6 @@ const result = data.find(
 
         } else {
 
-            // ⏳ kalau data belum masuk → retry
             status.innerHTML = "Analyse läuft noch... bitte warten.";
 
             setTimeout(fetchResults, 4000);
