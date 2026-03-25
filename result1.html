@@ -87,9 +87,9 @@ async function fetchResults(){
 
         const data = await fetch(sheetURL).then(r => r.json());
 
-        const result = data.find(
-            row => String(row["Submission ID"]) === String(submissionId)
-        );
+const result = data.find(
+    row => String(row["Submission ID"]).replace(/\\D/g,'') === String(submissionId).replace(/\\D/g,'')
+);
 
         if(result){
 
