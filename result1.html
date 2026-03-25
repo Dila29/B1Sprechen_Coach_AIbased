@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ergebnis – B1 Sprechen Coach</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 font-sans">
+
+  <div class="max-w-3xl mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-4">Ergebnis Ihrer Analyse</h1>
+
+    <div id="loading" class="text-gray-500">Lade Daten...</div>
+
+    <div id="content" class="hidden space-y-4">
+      <div class="bg-white p-4 rounded-xl shadow">
+        <h2 class="font-semibold">Name</h2>
+        <p id="name"></p>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl shadow">
+        <h2 class="font-semibold">Situation</h2>
+        <p id="situation"></p>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl shadow">
+        <h2 class="font-semibold">Transkript</h2>
+        <p id="transkript"></p>
+      </div>
+
+      <div class="bg-white p-4 rounded-xl shadow">
+        <h2 class="font-semibold">KI Analyse & Feedback</h2>
+        <p id="feedback"></p>
+      </div>
+    </div>
+
+    <div id="notfound" class="hidden text-red-500">
+      Daten nicht gefunden. Bitte versuchen Sie es später.
+    </div>
+  </div>
+
+<script>
+// 🔥 GANTI DENGAN CSV LINK (bukan pubhtml)
+const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR2JXCJd6lbBIzafLRdzMuOODoCOdsf3htJuOM53-mSWcEP4pEY_KaodcMmCDjhiwNqJnJpA7OSPhCj/pub?output=csv";
+
+// ambil ID dari URL
+const params = new URLSearchParams(window.location.search);
+const id = params.get("id");
+
+async function loadData() {
+  const res = await fetch(sheetURL);
+  const text = await res.text();
+
+  const rows = text.split("\n").map(r => r.split(","));
+
+  // ambil header
+  const headers = rows[0];
+
+  // cari index kolom
+  const idx = {
+    name: headers.indexOf("Name"),
+    situation: headers.indexOf("Situatin wählen"),
+    transkript: headers.indexOf("Transkripte"),
+    feedback: headers.indexOf("KI Analyse und Feedback"),
+    submission: headers.indexOf("Submission ID")
+  };
+
+  // cari data sesuai ID
+  const row = rows.find(r => r[idx.submission] === id);
+
+  document.getElementById("loading").classList.add("hidden");
+
+  if (!row) {
+    document.getElementById("notfound").classList.remove("hidden");
+    return;
+  }
+
+  document.getElementById("content").classList.remove("hidden");
+
+  document.getElementById("name").innerText = row[idx.name];
+  document.getElementById("situation").innerText = row[idx.situation];
+  document.getElementById("transkript").innerText = row[idx.transkript];
+  document.getElementById("feedback").innerText = row[idx.feedback];
+}
+
+loadData();
+</script>
+
+</body>
+</html>
