@@ -1,90 +1,134 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ergebnis – B1 Sprechen Coach</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>B1 Speaking Coach - Analyse</title>
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+<style>
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #fdf8fd;
+}
+.shimmer {
+    background: linear-gradient(90deg, #f7f2f8 25%, #e5e1e7 50%, #f7f2f8 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+@keyframes loading {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+</style>
+
 </head>
-<body class="bg-gray-50 font-sans">
 
-  <div class="max-w-3xl mx-auto p-6">
-    <h1 class="text-2xl font-bold mb-4">Ergebnis Ihrer Analyse</h1>
+<body class="min-h-screen flex flex-col">
 
-    <div id="loading" class="text-gray-500">Lade Daten...</div>
+<main class="flex-grow flex items-center justify-center p-6">
+<div class="w-full max-w-3xl">
 
-    <div id="content" class="hidden space-y-4">
-      <div class="bg-white p-4 rounded-xl shadow">
-        <h2 class="font-semibold">Name</h2>
+<!-- Loading -->
+<div id="status" class="text-center py-20">
+    <h2 class="text-xl font-bold">Analyse wird geladen...</h2>
+    <p class="text-gray-500 mt-2">Bitte warten Sie einige Sekunden</p>
+</div>
+
+<!-- Result -->
+<div id="result" class="hidden space-y-6">
+
+    <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="font-bold text-lg mb-2">Name</h2>
         <p id="name"></p>
-      </div>
+    </div>
 
-      <div class="bg-white p-4 rounded-xl shadow">
-        <h2 class="font-semibold">Situation</h2>
-        <p id="situation"></p>
-      </div>
+    <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="font-bold text-lg mb-2">Situation</h2>
+        <p id="thema"></p>
+    </div>
 
-      <div class="bg-white p-4 rounded-xl shadow">
-        <h2 class="font-semibold">Transkript</h2>
+    <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="font-bold text-lg mb-2">Transkript</h2>
         <p id="transkript"></p>
-      </div>
-
-      <div class="bg-white p-4 rounded-xl shadow">
-        <h2 class="font-semibold">KI Analyse & Feedback</h2>
-        <p id="feedback"></p>
-      </div>
     </div>
 
-    <div id="notfound" class="hidden text-red-500">
-      Daten nicht gefunden. Bitte versuchen Sie es später.
+    <div class="bg-white p-6 rounded-xl shadow">
+        <h2 class="font-bold text-lg mb-2">KI Analyse & Feedback</h2>
+        <div id="feedback"></div>
     </div>
-  </div>
+
+</div>
+
+</div>
+</main>
 
 <script>
-// 🔥 GANTI DENGAN CSV LINK (bukan pubhtml)
-const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR2JXCJd6lbBIzafLRdzMuOODoCOdsf3htJuOM53-mSWcEP4pEY_KaodcMmCDjhiwNqJnJpA7OSPhCj/pub?output=csv";
 
-// ambil ID dari URL
+// ✅ ambil ID dari URL (?id=...)
 const params = new URLSearchParams(window.location.search);
-const id = params.get("id");
+const submissionId = params.get("id");
 
-async function loadData() {
-  const res = await fetch(sheetURL);
-  const text = await res.text();
+// ✅ ambil data dari Google Sheets (opensheet)
+const sheetURL = "https://opensheet.elk.sh/1Q_19DamqDI5sTmJwNZreqIapyiIL-LpYdlaR2tLPUUI/Sheet1";
 
-  const rows = text.split("\n").map(r => r.split(","));
+async function fetchResults(){
 
-  // ambil header
-  const headers = rows[0];
+    const status = document.getElementById("status");
 
-  // cari index kolom
-  const idx = {
-    name: headers.indexOf("Name"),
-    situation: headers.indexOf("Situatin wählen"),
-    transkript: headers.indexOf("Transkripte"),
-    feedback: headers.indexOf("KI Analyse und Feedback"),
-    submission: headers.indexOf("Submission ID")
-  };
+    if(!submissionId){
+        status.innerHTML = "ID tidak ditemukan di URL.";
+        return;
+    }
 
-  // cari data sesuai ID
-  const row = rows.find(r => r[idx.submission] === id);
+    try{
 
-  document.getElementById("loading").classList.add("hidden");
+        const data = await fetch(sheetURL).then(r => r.json());
 
-  if (!row) {
-    document.getElementById("notfound").classList.remove("hidden");
-    return;
-  }
+        const result = data.find(
+            row => String(row["Submission ID"]) === String(submissionId)
+        );
 
-  document.getElementById("content").classList.remove("hidden");
+        if(result){
 
-  document.getElementById("name").innerText = row[idx.name];
-  document.getElementById("situation").innerText = row[idx.situation];
-  document.getElementById("transkript").innerText = row[idx.transkript];
-  document.getElementById("feedback").innerText = row[idx.feedback];
+            document.getElementById("name").innerText = result["Name"] || "";
+
+            document.getElementById("thema").innerText =
+                result["Situatin wählen"] || "";
+
+            document.getElementById("transkript").innerText =
+                result["Transkripte"] || "";
+
+            const feedbackText = result["KI Analyse und Feedback"] || "";
+
+            const formattedFeedback =
+                feedbackText.split("\n")
+                .map(p => `<p class="mb-2">${p}</p>`)
+                .join("");
+
+            document.getElementById("feedback").innerHTML = formattedFeedback;
+
+            document.getElementById("status").classList.add("hidden");
+            document.getElementById("result").classList.remove("hidden");
+
+        } else {
+
+            // ⏳ kalau data belum masuk → retry
+            status.innerHTML = "Analyse läuft noch... bitte warten.";
+
+            setTimeout(fetchResults, 4000);
+        }
+
+    } catch (error){
+        status.innerHTML = "Fehler beim Laden der Daten.";
+        console.error(error);
+    }
 }
 
-loadData();
+fetchResults();
+
 </script>
 
 </body>
