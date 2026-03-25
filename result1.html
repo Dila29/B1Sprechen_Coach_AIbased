@@ -78,9 +78,11 @@ async function fetchResults(){
 
         console.log("DATA:", data);
 
-        const result = data.find(
-            row => String(row["Submission ID"]).trim() === String(submissionId).trim()
-        );
+const result = data.find(row => {
+    const sheetId = String(row["Submission ID"] || "").replace(/\s/g, "");
+    const urlId = String(submissionId || "").replace(/\s/g, "");
+    return sheetId === urlId;
+});
 
         if(result){
 
@@ -118,6 +120,9 @@ async function fetchResults(){
 }
 
 fetchResults();
+
+    console.log("Cari ID:", submissionId);
+console.log("Semua ID:", data.map(d => d["Submission ID"]));
 
 </script>
 
