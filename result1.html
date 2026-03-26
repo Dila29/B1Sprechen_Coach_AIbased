@@ -10,7 +10,20 @@
 <style>
 body {
     font-family: sans-serif;
-    background-color: #fdf8fd;
+    background: linear-gradient(135deg, #fdf8fd, #f3e8ff);
+}
+.loader {
+  border: 4px solid #eee;
+  border-top: 4px solid #9333ea;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
 </head>
@@ -20,31 +33,47 @@ body {
 <main class="flex-grow flex items-center justify-center p-6">
 <div class="w-full max-w-3xl">
 
-<!-- Loading -->
+<!-- Loading Fancy -->
 <div id="status" class="text-center py-20">
-    <h2 class="text-xl font-bold">Analyse wird geladen...</h2>
-    <p class="text-gray-500 mt-2">Bitte warten Sie einige Sekunden</p>
+
+    <div class="loader"></div>
+
+    <h2 id="loadingText" class="text-xl font-bold mb-3">
+        Ihre Analyse wird vorbereitet
+    </h2>
+
+    <p class="text-gray-600 mb-3">
+        Ihre Antwort wird gerade von unserer KI analysiert.
+    </p>
+
+    <p class="text-gray-500 mb-2">⏳ Dies kann bis zu 5 Minuten dauern.</p>
+    <p class="text-gray-500 mb-2">📧 Das Ergebnis erhalten Sie auch per E-Mail.</p>
+
+    <div class="mt-6 text-sm text-gray-400">
+        💡 Tipp: Versuchen Sie jeden Tag laut Deutsch zu sprechen – auch nur 5 Minuten!
+    </div>
+
 </div>
 
 <!-- Result -->
 <div id="result" class="hidden space-y-6">
 
-    <div class="bg-white p-6 rounded-xl shadow">
+    <div class="bg-white p-6 rounded-2xl shadow">
         <h2 class="font-bold text-lg mb-2">Name</h2>
         <p id="name"></p>
     </div>
 
-    <div class="bg-white p-6 rounded-xl shadow">
+    <div class="bg-white p-6 rounded-2xl shadow">
         <h2 class="font-bold text-lg mb-2">Situation</h2>
         <p id="situation"></p>
     </div>
 
-    <div class="bg-white p-6 rounded-xl shadow">
+    <div class="bg-white p-6 rounded-2xl shadow">
         <h2 class="font-bold text-lg mb-2">Transkript</h2>
         <p id="transkript"></p>
     </div>
 
-    <div class="bg-white p-6 rounded-xl shadow">
+    <div class="bg-white p-6 rounded-2xl shadow">
         <h2 class="font-bold text-lg mb-2">KI Analyse & Feedback</h2>
         <div id="feedback"></div>
     </div>
@@ -56,11 +85,20 @@ body {
 
 <script>
 
+// animasi titik-titik
+let dots = 0;
+setInterval(() => {
+  const el = document.getElementById("loadingText");
+  if(el){
+    dots = (dots + 1) % 4;
+    el.innerText = "Ihre Analyse wird vorbereitet" + ".".repeat(dots);
+  }
+}, 500);
+
 // ambil ID dari URL
 const params = new URLSearchParams(window.location.search);
 const submissionId = params.get("id");
 
-// ✅ URL SUDAH DIPERBAIKI
 const sheetURL = "https://opensheet.elk.sh/1SfKI2AxF3ZqVTvok7CPM-VctgLh3AuB28tKc0Tpdq5k/Sheet1";
 
 async function fetchResults(){
@@ -76,15 +114,13 @@ async function fetchResults(){
 
         const data = await fetch(sheetURL).then(r => r.json());
 
-        console.log("DATA:", data);
+        const result = data.find(row => {
+            const sheetId = String(row["Submission ID"] || "").replace(/\s/g, "");
+            const urlId = String(submissionId || "").replace(/\s/g, "");
+            return sheetId === urlId;
+        });
 
-const result = data.find(row => {
-    const sheetId = String(row["Submission ID"] || "").replace(/\s/g, "");
-    const urlId = String(submissionId || "").replace(/\s/g, "");
-    return sheetId === urlId;
-});
-
-        if(result){
+        if(result && result["KI Analyse dan Feedback"] !== ""){
 
             document.getElementById("name").innerText = result["Name"] || "";
 
@@ -108,8 +144,6 @@ const result = data.find(row => {
 
         } else {
 
-            status.innerHTML = "Analyse läuft noch... bitte warten.";
-
             setTimeout(fetchResults, 4000);
         }
 
@@ -120,9 +154,6 @@ const result = data.find(row => {
 }
 
 fetchResults();
-
-    console.log("Cari ID:", submissionId);
-console.log("Semua ID:", data.map(d => d["Submission ID"]));
 
 </script>
 
