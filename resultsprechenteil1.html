@@ -99,6 +99,7 @@ Startseite
 
 <script>
 
+// animasi titik loading
 let dots = 0;
 setInterval(() => {
   const el = document.getElementById("loadingText");
@@ -108,10 +109,11 @@ setInterval(() => {
   }
 }, 500);
 
+// ambil submission ID
 const params = new URLSearchParams(window.location.search);
 const submissionId = params.get("id");
 
-// ✅ DUA SUMBER DATA
+// dua sumber data
 const sheetText = "https://opensheet.elk.sh/1SfKI2AxF3ZqVTvok7CPM-VctgLh3AuB28tKc0Tpdq5k/Sheet1";
 const sheetAudio = "https://opensheet.elk.sh/1kgDhs5Deb3bVAUCHIeENC0BmFLBUpM-Ir9VFlY6r4RY/Sheet1";
 
@@ -144,19 +146,17 @@ async function fetchResults(){
 
         const result = resultText || resultAudio;
 
-        // ambil feedback (handle perbedaan nama kolom)
-        const feedbackText =
-            result?.["KI Analyse und Feedback"] ||
-            result?.["KI Analyse & Feedback"] ||
-            "";
-
-        if(result && result["KI Analyse und Feedback"]){
+        if(result && result["KI Analyse & Feedback"]){
 
             document.getElementById("name").innerText = result["Name"] || "";
-            document.getElementById("situation").innerText = result["Situatin wählen"] || result["Situation"] || "";
-            document.getElementById("transkript").innerText = result["Transkripte"] || result["Transcription"] || "";
 
-            // (sudah ditangani di atas dengan fallback)
+            document.getElementById("situation").innerText =
+                result["Situation wählen"] || "";
+
+            document.getElementById("transkript").innerText =
+                result["Transkripte"] || "";
+
+            const feedbackText = result["KI Analyse & Feedback"]?.trim() || "";
 
             const formattedFeedback = feedbackText
                 .split("\n")
