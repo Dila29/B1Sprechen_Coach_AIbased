@@ -144,13 +144,19 @@ async function fetchResults(){
 
         const result = resultText || resultAudio;
 
+        // ambil feedback (handle perbedaan nama kolom)
+        const feedbackText =
+            result?.["KI Analyse und Feedback"] ||
+            result?.["KI Analyse & Feedback"] ||
+            "";
+
         if(result && result["KI Analyse und Feedback"]){
 
             document.getElementById("name").innerText = result["Name"] || "";
             document.getElementById("situation").innerText = result["Situatin wählen"] || result["Situation"] || "";
             document.getElementById("transkript").innerText = result["Transkripte"] || result["Transcription"] || "";
 
-            const feedbackText = result["KI Analyse und Feedback"] || "";
+            // (sudah ditangani di atas dengan fallback)
 
             const formattedFeedback = feedbackText
                 .split("\n")
