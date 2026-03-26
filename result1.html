@@ -5,16 +5,44 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>B1 Speaking Coach - Analyse</title>
 
-<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+<script>
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                primary: "#af0000",
+                "surface": "#fdf8fd",
+                "on-primary": "#ffffff",
+                "secondary-container": "#fdcc00",
+                "on-secondary-container": "#6e5700",
+              },
+              fontFamily: {
+                headline: ["Plus Jakarta Sans", "sans-serif"],
+                body: ["Plus Jakarta Sans", "sans-serif"],
+              },
+              borderRadius: {lg: "2rem", xl: "3rem"}
+            }
+          }
+        }
+</script>
 
 <style>
 body {
-    font-family: sans-serif;
-    background: linear-gradient(135deg, #fdf8fd, #f3e8ff);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #fdf8fd;
+}
+.glass-nav {
+    background: rgba(28, 27, 31, 0.95);
+    backdrop-filter: blur(20px);
 }
 .loader {
   border: 4px solid #eee;
-  border-top: 4px solid #9333ea;
+  border-top: 4px solid #af0000;
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -30,10 +58,32 @@ body {
 
 <body class="min-h-screen flex flex-col">
 
-<main class="flex-grow flex items-center justify-center p-6">
-<div class="w-full max-w-3xl">
+<!-- Navbar -->
+<nav class="glass-nav sticky top-0 z-50 px-6 py-4 border-b border-white/10">
+<div class="max-w-6xl mx-auto flex items-center justify-between">
 
-<!-- Loading Fancy -->
+<div class="flex items-center gap-4">
+<div class="bg-secondary-container p-2 rounded-lg">
+<span class="material-symbols-outlined text-on-secondary-container">school</span>
+</div>
+<div>
+<h1 class="text-secondary-container font-bold text-xl">B1 Speaking Coach</h1>
+<p class="text-white/60 text-xs">AI Feedback für Ihre Sprechen-Aufgaben</p>
+</div>
+</div>
+
+<a href="index.html"
+   class="bg-primary hover:opacity-90 text-on-primary px-6 py-2.5 rounded-full text-sm shadow-lg">
+   Startseite
+</a>
+
+</div>
+</nav>
+
+<main class="flex-grow flex items-center justify-center p-6 md:p-12">
+<div class="w-full max-w-[900px] space-y-8">
+
+<!-- Loading -->
 <div id="status" class="text-center py-20">
 
     <div class="loader"></div>
@@ -46,12 +96,8 @@ body {
         Ihre Antwort wird gerade von unserer KI analysiert.
     </p>
 
-    <p class="text-gray-500 mb-2">⏳ Dies kann bis zu 5 Minuten dauern.</p>
-    <p class="text-gray-500 mb-2">📧 Das Ergebnis erhalten Sie auch per E-Mail.</p>
-
-    <div class="mt-6 text-sm text-gray-400">
-        💡 Tipp: Versuchen Sie jeden Tag laut Deutsch zu sprechen – auch nur 5 Minuten!
-    </div>
+    <p class="text-gray-500">⏳ Dies kann bis zu 5 Minuten dauern.</p>
+    <p class="text-gray-500">📧 Ergebnis auch per E-Mail verfügbar.</p>
 
 </div>
 
@@ -85,7 +131,6 @@ body {
 
 <script>
 
-// animasi titik-titik
 let dots = 0;
 setInterval(() => {
   const el = document.getElementById("loadingText");
@@ -95,7 +140,6 @@ setInterval(() => {
   }
 }, 500);
 
-// ambil ID dari URL
 const params = new URLSearchParams(window.location.search);
 const submissionId = params.get("id");
 
@@ -120,20 +164,16 @@ async function fetchResults(){
             return sheetId === urlId;
         });
 
-        if(result && result["KI Analyse dan Feedback"] !== ""){
+        if(result && result["KI Analyse und Feedback"] !== ""){
 
             document.getElementById("name").innerText = result["Name"] || "";
-
-            document.getElementById("situation").innerText =
-                result["Situatin wählen"] || "";
-
-            document.getElementById("transkript").innerText =
-                result["Transkripte"] || "";
+            document.getElementById("situation").innerText = result["Situatin wählen"] || "";
+            document.getElementById("transkript").innerText = result["Transkripte"] || "";
 
             const feedbackText = result["KI Analyse und Feedback"] || "";
 
-            const formattedFeedback =
-                feedbackText.split("\n")
+            const formattedFeedback = feedbackText
+                .split("\n")
                 .map(p => `<p class="mb-2">${p}</p>`)
                 .join("");
 
@@ -143,7 +183,6 @@ async function fetchResults(){
             document.getElementById("result").classList.remove("hidden");
 
         } else {
-
             setTimeout(fetchResults, 4000);
         }
 
